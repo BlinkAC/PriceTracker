@@ -302,3 +302,5 @@ D:\net\repos\Products3\Products3\obj\Debug\net8.0-maccatalyst\maccatalyst-x64\re
 D:\net\repos\Products3\Products3\obj\Debug\net8.0-maccatalyst\maccatalyst-x64\Products3.pdb
 D:\net\repos\Products3\Products3\obj\Debug\net8.0-maccatalyst\maccatalyst-x64\Products3.genruntimeconfig.cache
 D:\net\repos\Products3\Products3\obj\Debug\net8.0-maccatalyst\maccatalyst-x64\ref\Products3.dll
+D:\net\repos\Products3\Products3\obj\Debug\net8.0-maccatalyst\maccatalyst-x64\Products3.sourcelink.json
+D:\net\repos\Products3\Products3\bin\Debug\net8.0-maccatalyst\maccatalyst-x64\CommunityToolkit.Mvvm.dll

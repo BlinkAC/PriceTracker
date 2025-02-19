@@ -4,5 +4,36 @@
         <name>Products3</name>
     </assembly>
     <members>
+        <member name="T:Products3.Viewmodels.MainPageViewModel">
+            <inheritdoc/>
+            <inheritdoc/>
+        </member>
+        <member name="P:Products3.Viewmodels.MainPageViewModel.Rata">
+            <inheritdoc cref="F:Products3.Viewmodels.MainPageViewModel.rata"/>
+        </member>
+        <member name="F:Products3.Viewmodels.MainPageViewModel.button1ClickedCommand">
+            <summary>The backing field for <see cref="P:Products3.Viewmodels.MainPageViewModel.Button1ClickedCommand"/>.</summary>
+        </member>
+        <member name="P:Products3.Viewmodels.MainPageViewModel.Button1ClickedCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="M:Products3.Viewmodels.MainPageViewModel.OnButton1Clicked"/>.</summary>
+        </member>
+        <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs">
+            <summary>
+            A helper type providing cached, reusable <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instances
+            for all properties generated with <see cref="T:CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute"/>.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Rata">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Rata" generated properties.</summary>
+        </member>
+        <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs">
+            <summary>
+            A helper type providing cached, reusable <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instances
+            for all properties generated with <see cref="T:CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute"/>.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Rata">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Rata" generated properties.</summary>
+        </member>
     </members>
 </doc>

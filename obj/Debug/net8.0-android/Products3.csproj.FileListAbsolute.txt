@@ -286,7 +286,6 @@ D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\System.
 D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\System.Numerics.dll
 D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\System.Numerics.Vectors.dll
 D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\System.ObjectModel.dll
-D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\System.Private.CoreLib.dll
 D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\System.Private.DataContractSerialization.dll
 D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\System.Private.Uri.dll
 D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\System.Private.Xml.dll
@@ -1049,3 +1048,11 @@ D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\compressed_ass
 D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\marshal_methods.arm64-v8a.o
 D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\jni_remap.arm64-v8a.o
 D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\app_shared_libraries\arm64-v8a\libxamarin-app.so
+D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\Products3.sourcelink.json
+D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\arm64-v8a\System.Private.CoreLib.dll
+D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\armeabi-v7a\System.Private.CoreLib.dll
+D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\CommunityToolkit.Mvvm.dll
+D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\CommunityToolkit.Mvvm.pdb
+D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\x86\System.Private.CoreLib.dll
+D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\x86_64\System.Private.CoreLib.dll
+D:\net\repos\Products3\Products3\obj\Debug\net8.0-android\android\assets\System.Private.CoreLib.dll
