@@ -1,0 +1,11 @@
+# Build artifacts
+bin/
+obj/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
