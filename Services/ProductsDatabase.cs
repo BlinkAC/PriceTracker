@@ -36,10 +36,10 @@ namespace Products3.Services
         /// <param name="product">The product id and url to be stored locally</param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task AddProduct(Product product)
+        public async Task<int> AddProduct(Product product)
         {
             var conn = await _dbConnection;
-            InsertThreadSafe(product, conn);
+            return InsertThreadSafe(product, conn);
         }
 
         /// <summary>

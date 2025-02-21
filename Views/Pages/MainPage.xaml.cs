@@ -7,11 +7,18 @@ namespace Products3.Views.Pages
     public partial class MainPage : BasePage
     {
         int count = 0;
-
+        private readonly MainPageViewModel _viewModel;
         public MainPage(MainPageViewModel viewModel)
         {
             InitializeComponent();
             BindingContext = viewModel;
+            _viewModel = viewModel;
+        }
+
+        protected async override void OnAppearing()
+        {
+            base.OnAppearing();
+            await _viewModel.Initialize();
         }
     }
 

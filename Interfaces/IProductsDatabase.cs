@@ -12,7 +12,7 @@ namespace Products3.Interfaces
     public interface IProductsDatabase
     {
         AsyncLazy<SQLiteConnection> DbConnection { get; }
-        public Task AddProduct(Product product);
+        public Task<int> AddProduct(Product product);
 
         public Task<IEnumerable<Product>> GetProducts();
 

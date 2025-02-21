@@ -4,6 +4,7 @@ using Android.Content.PM;
 using Android.OS;
 using Products3.Platforms.Android;
 using Products3.Services;
+using Products3.Views.Pages;
 
 namespace Products3
 {
@@ -34,16 +35,18 @@ namespace Products3
             //}
             _initialIntent = Intent;
         }
-        private void HandleIntent(Intent intent)
+        private bool HandleIntent(Intent intent)
         {
             if (intent != null && intent.Action == Intent.ActionSend && intent.Type == "text/plain")
             {
                 System.Diagnostics.Debug.WriteLine("Intent recibido en HandleIntent");
-                ShareHandler.HandleShare(intent);
+
+                return ShareHandler.HandleShare(intent);
             }
             else
             {
                 System.Diagnostics.Debug.WriteLine("Intent nulo o no es ActionSend");
+                return ShareHandler.HandleShare(intent!);
             }
         }
 
@@ -60,7 +63,13 @@ namespace Products3
         {
             base.OnNewIntent(intent);
             _initialIntent = intent;
-            HandleIntent(intent);
+
+            if (HandleIntent(intent))
+            {
+                //Redirect to form page if data was extracted sucessfully
+                Shell.Current.GoToAsync(nameof(ProductFormPage));
+            }
+            
         }
     }
 }

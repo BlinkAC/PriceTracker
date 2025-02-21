@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <views:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Products3.Models.SQLModels"
              xmlns:viewmodel="clr-namespace:Products3.Viewmodels"
              xmlns:views="clr-namespace:Products3.Views"
              x:DataType="viewmodel:MainPageViewModel"
@@ -33,6 +34,49 @@
                 SemanticProperties.Hint="Counts the number of times you click"
                 Command="{Binding Button1ClickedCommand}"
                 HorizontalOptions="Fill" />
+
+            <CollectionView ItemsSource="{Binding ProductsList}"  Margin="0,30,0,0">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type models:Product}">
+                        <VerticalStackLayout>
+
+
+
+                            <Grid Margin="0,0,0,10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition  />
+                                    <RowDefinition  />
+                                    <RowDefinition  />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition  />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <!--<Label Text="{Binding LocationDescription}"  VerticalOptions="Center" Grid.Row="0"/>-->
+
+                                <Label Grid.Row="0"
+                                    FontSize="11">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}Identificador: {0} Nombre: {1}.">
+                                            <Binding Path="ProductId" FallbackValue="" />
+                                            <Binding Path="ProductName" FallbackValue="" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+
+                                <!--<Label Text="Verified:" Grid.Row="1" Grid.Column="0" VerticalOptions="Center" />-->
+                                <!--CheckedChanged="OnProperty1CheckedChanged"-->
+                                <!--<CheckBox IsChecked="{Binding ProductChecked}" Grid.Row="1" Grid.Column="1" VerticalOptions="Center"-->  <!--/>-->
+                                <Button Text="Check history" Grid.Row="1" Grid.Column="1" VerticalOptions="Center"/>
+
+                                <!--<Label Text="Needs review:" Grid.Row="2" Grid.Column="0" VerticalOptions="Center" />
+                                <CheckBox IsChecked="{Binding Property2}" Grid.Row="2" Grid.Column="1" VerticalOptions="Center" CheckedChanged="OnProperty1CheckedChanged"  />-->
+                            </Grid>
+
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </VerticalStackLayout>
     </ScrollView>
 

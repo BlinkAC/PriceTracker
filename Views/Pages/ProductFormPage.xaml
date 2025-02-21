@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<views:BasePage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:Products3.Views.Pages"
+    xmlns:viewmodel="clr-namespace:Products3.Viewmodels"
+    xmlns:views="clr-namespace:Products3.Views"
+    x:DataType="viewmodel:ProductFormViewModel"
+    x:Class="Products3.Views.Pages.ProductFormPage">
+    <ScrollView>
+        <VerticalStackLayout>
+            <Label Text="Product Id:"/>
+            <Entry 
+                x:Name="productIdEntry"
+                Text="{Binding ProductId}"
+                IsEnabled="False"
+                Margin="0,0,0,50"/>
+            
+            <Label Text="Product Name:"/>
+            <Entry 
+                x:Name="productNameEntry"
+                Text="{Binding ProductName}"
+                IsEnabled="False"
+                Margin="0,0,0,50"/>
+            
+            <Label Text="Product url:"/>
+            <Entry 
+                x:Name="productUrlEntry"
+                Text="{Binding ProductURL}"
+                MaximumHeightRequest="250"
+                MaximumWidthRequest="250"
+                MinimumWidthRequest="250"
+                MinimumHeightRequest="250"
+                IsEnabled="False"
+                Margin="0,0,0,50"/>
+
+            <Button
+                x:Name="saveProdductButton"
+                Text="Guardar producto" 
+                Command="{Binding SaveProductButtonCommand}"
+                HorizontalOptions="Fill" />
+        </VerticalStackLayout>
+    </ScrollView>
+</views:BasePage>
