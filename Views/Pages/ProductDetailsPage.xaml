@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<views:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Products3.Models.SQLModels"
+             xmlns:chart="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
+             xmlns:viewmodel="clr-namespace:Products3.Viewmodels"
+             xmlns:views="clr-namespace:Products3.Views"
+             x:DataType="viewmodel:ProductDetailsViewModel"
+             x:Class="Products3.Views.Pages.ProductDetailsPage">
+    <ContentPage.Content>
+        <ScrollView>
+            <VerticalStackLayout>
+                <Grid RowSpacing="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Source="{Binding ProductImage}" 
+                       Grid.Row="0" 
+                       Grid.Column="0" 
+                       HorizontalOptions="Start"
+                       WidthRequest="50" 
+                       HeightRequest="50"/>
+
+                    <Label Text="{Binding ChartTitle}"
+                       Grid.Row="0" 
+                       Grid.ColumnSpan="2"
+                       Margin="70,0,0,0"
+                       HorizontalOptions="Start"
+                       VerticalOptions="Center"/>
+
+                    <chart:SfCartesianChart BackgroundColor="White" Grid.Row="1" Grid.ColumnSpan="3">
+                        <chart:SfCartesianChart.XAxes>
+                            <chart:DateTimeAxis IntervalType="Days"/>
+                        </chart:SfCartesianChart.XAxes>
+
+                        <chart:SfCartesianChart.YAxes>
+                            <chart:NumericalAxis/>
+                        </chart:SfCartesianChart.YAxes>
+                        <chart:LineSeries ItemsSource="{Binding Data}" XBindingPath="Date" YBindingPath="Price" ShowMarkers="True">
+                            <chart:LineSeries.MarkerSettings>
+                                <chart:ChartMarkerSettings Type="Diamond"
+                               Fill="#63B1FF"
+                               Stroke="Black"
+                               StrokeWidth="1"
+                               Height="10"
+                               Width="10"
+                                 />
+                            </chart:LineSeries.MarkerSettings>
+                        </chart:LineSeries>
+                    </chart:SfCartesianChart>
+                    <Label
+                    Text="Precio mas alto registrado:"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    />
+                    <Label Grid.Row="3"
+                       Grid.Column="0"
+                    FontSize="11">
+                        <Label.Text>
+                            <MultiBinding StringFormat="${0}">
+                                <Binding Path="HighestPrice" FallbackValue="" />
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                    <Label
+                    Text="Precio actual:"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    />
+                    <Label Grid.Row="3"
+                       Grid.Column="1"
+                    FontSize="11">
+                        <Label.Text>
+                            <MultiBinding StringFormat="${0}">
+                                <Binding Path="CurrentPrice" FallbackValue="" />
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                    <Label
+                    Text="Precio mas bajo registrado:"
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    />
+                    <Label Grid.Row="3"
+                       Grid.Column="2"
+                    FontSize="11">
+                        <Label.Text>
+                            <MultiBinding StringFormat="${0}">
+                                <Binding Path="LowestPrice" FallbackValue="" />
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                    <Label Grid.Row="4"
+                       Grid.ColumnSpan="4"
+                    FontSize="11">
+                        <Label.Text>
+                            <MultiBinding StringFormat="Fecha ultima actualizacion: {0}">
+                                <Binding Path="LastUpdateDate" FallbackValue="" />
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                </Grid>
+
+                <Button
+                    x:Name="StopFollowingBtn"
+                    Text="Deja de seguir productor" 
+                    Command="{Binding StopFollowingProductCommand}"
+                    HorizontalOptions="Fill"
+                        Margin="60,0,60,0"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="2"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</views:BasePage>

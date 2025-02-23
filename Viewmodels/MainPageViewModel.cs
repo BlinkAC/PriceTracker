@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Windows.Input;
 using Products3.Services;
 using Products3.Interfaces;
-using static System.Net.Mime.MediaTypeNames;
 using Products3.Models.SQLModels;
 using System.Text.Json;
+using Products3.Views.Pages;
 
 namespace Products3.Viewmodels
 {
@@ -38,12 +31,9 @@ namespace Products3.Viewmodels
         }
 
         [RelayCommand]
-        public async Task OnButton1Clicked()
+        public async Task OnNavigateProductDetails(string productId)
         {
-            var resposne = await _backendClient.GetProducHistory();
-            var content = resposne.Content.ReadAsStringAsync().Result.ToString();
-            Rata = JsonSerializer.Deserialize<ProductRecord>(content).ProductId;
-
+            await AppShell.Current.GoToAsync(nameof(ProductDetailsPage) + $"?productId={productId}");
         }
         public override async Task Initialize()  {
 

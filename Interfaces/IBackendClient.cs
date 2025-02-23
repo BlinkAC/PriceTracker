@@ -8,6 +8,6 @@ namespace Products3.Interfaces
 {
     public interface IBackendClient
     {
-        public Task<HttpResponseMessage> GetProducHistory();
+        public Task<HttpResponseMessage> GetProducHistory(string productId);
     }
 }

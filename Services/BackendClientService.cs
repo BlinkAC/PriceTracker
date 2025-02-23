@@ -14,9 +14,14 @@ namespace Products3.Services
         {
             _httpClient = httpClient;
         }
-        public Task<HttpResponseMessage> GetProducHistory()
+        public Task<HttpResponseMessage> GetProducHistory(string productId)
         {
-            return _httpClient.GetAsync(new Uri("http://192.168.100.26:8080/api/get-product-history?productId=MLM24529297"));
+            //By default flask and possibly any other local APIs are not accesible in the app
+            //it's accesible from console app or postman
+            //locally you have to use the machine's IPV4
+            //cmd: ipconfig
+            //grab IPv4 Address
+            return _httpClient.GetAsync(new Uri($"http://192.168.100.26:8080/api/get-product-history?productId={productId}&productStore=ML"));
         }
     }
 }

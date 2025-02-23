@@ -8,6 +8,7 @@ namespace Products3
         {
             InitializeComponent();
             Routing.RegisterRoute(nameof(ProductFormPage), typeof(ProductFormPage));
+            Routing.RegisterRoute(nameof(ProductDetailsPage), typeof(ProductDetailsPage));
         }
     }
 }

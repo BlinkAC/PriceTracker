@@ -16,7 +16,7 @@ namespace Products3.Interfaces
 
         public Task<IEnumerable<Product>> GetProducts();
 
-        public Task RemoveProducts(IEnumerable<string> productString);
+        public Task<int> RemoveProducts(IEnumerable<string> productString);
 
         public Task RemoveProduct(string logIds);
 

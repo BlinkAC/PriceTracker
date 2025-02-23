@@ -20,7 +20,7 @@ namespace Products3.Models.SQLModels
         [JsonPropertyName("highestPrice")]
         public float ProductHighestPrice { get; set; }
         [JsonPropertyName("lowestPrice")]
-        public float ProductLowesttPrice { get; set; }
+        public float ProductLowestPrice { get; set; }
         [JsonPropertyName("priceHistory")]
         public IEnumerable<ProductHistory> ProductHistory { get; set; } = new List<ProductHistory>();
     }

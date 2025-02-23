@@ -68,25 +68,25 @@ namespace Products3.Services
         /// <param name="productString"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task RemoveProducts(IEnumerable<string> productIds)
+        public async Task<int> RemoveProducts(IEnumerable<string> productIds)
         {
             var conn = await _dbConnection;
 
-            var s = string.Join(',', productIds.Select(i => $"'{i}'"));
+            // Construir la consulta de eliminación
+            var parameterizedQuery = "DELETE FROM Product WHERE ProductId IN (" +
+                                      string.Join(",", productIds.Select((id) => $"'{id}'")) + ")";
 
-            var products = conn.Query<Product>($"SELECT * FROM Product WHERE ProductId IN ({string.Join(',', productIds.Select(i => $"'{i}'"))})");
+            // Ejecutar la consulta de eliminación y obtener el número de filas afectadas
+            var rowsAffected = await Task.Run(() => conn.Execute(parameterizedQuery));
 
-            UpdateAllThreadSafe(products, conn);
+            return rowsAffected;
         }
 
-        private int UpdateAllThreadSafe<T>(IEnumerable<T> data, SQLiteConnection conn)
+        private int UpdateAll<T>(IEnumerable<T> data, SQLiteConnection conn)
         {
-            lock (_dbLock)
-            {
-                return conn.UpdateAll(data);
-            }
-        }
+            return conn.UpdateAll(data);
 
+        }
         private int InsertThreadSafe(object data, SQLiteConnection conn)
         {
             lock (_dbLock)
