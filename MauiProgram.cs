@@ -7,6 +7,15 @@ using Products3.Services;
 using Products3.Viewmodels;
 using Products3.Views.Pages;
 using Syncfusion.Maui.Core.Hosting;
+using Microsoft.Maui.LifecycleEvents;
+using Plugin.Firebase.CloudMessaging;
+
+
+#if IOS
+using Plugin.Firebase.Core.Platforms.iOS;
+#elif ANDROID
+using Plugin.Firebase.Core.Platforms.Android;
+#endif
 
 namespace Products3
 {
@@ -19,6 +28,7 @@ namespace Products3
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
                 .ConfigureSyncfusionCore()
+                .RegisterFirebaseServices()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -60,5 +70,25 @@ namespace Products3
 
             return builder;
         }
+
+        private static MauiAppBuilder RegisterFirebaseServices(this MauiAppBuilder builder)
+        {
+            builder.ConfigureLifecycleEvents(events => {
+        #if IOS
+                events.AddiOS(iOS => iOS.WillFinishLaunching((_, __) => {
+                    CrossFirebase.Initialize();
+                    FirebaseCloudMessagingImplementation.Initialize();
+                    return false;
+                }));
+        #elif ANDROID
+                events.AddAndroid(android => android.OnCreate((activity, _) =>
+                CrossFirebase.Initialize(activity)));
+        #endif
+            });
+
+            return builder;
+        }
+
+
     }
 }

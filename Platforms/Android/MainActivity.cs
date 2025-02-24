@@ -2,6 +2,8 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Microsoft.Azure.NotificationHubs;
+using Plugin.Firebase.CloudMessaging;
 using Products3.Platforms.Android;
 using Products3.Services;
 using Products3.Views.Pages;
@@ -13,26 +15,14 @@ namespace Products3
     public class MainActivity : MauiAppCompatActivity
     {
         private Intent _initialIntent;
-        protected override void OnCreate(Bundle? savedInstanceState)
+        protected override async void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             System.Diagnostics.Debug.WriteLine("Se lanzo el main activity");
             ShareHandler.Initialize(new AndroidShareHandler());
+            HandleIntent(Intent);
+            CreateNotificationChannelIfNeeded();
 
-            // Manejar el intent
-            //HandleIntent(Intent);
-            //var sharedText = Intent.Extras.GetString(Intent.ExtraText);
-            //if (Intent?.Action == Intent.Action && Intent.Type == "text/plain")
-            //{
-            //    var data = Intent?.ClipData?.GetItemAt(0);
-            //    var text = data.Text;
-            //    System.Diagnostics.Debug.WriteLine("url obtenido: "+ text);
-            //}
-
-            //if (Uri.IsWellFormedUriString(sharedText, UriKind.Absolute))
-            //{
-            //    // Manejar la URL compartida
-            //}
             _initialIntent = Intent;
         }
         private bool HandleIntent(Intent intent)
@@ -48,6 +38,23 @@ namespace Products3
                 System.Diagnostics.Debug.WriteLine("Intent nulo o no es ActionSend");
                 return ShareHandler.HandleShare(intent!);
             }
+        }
+
+        private void CreateNotificationChannelIfNeeded()
+        {
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            {
+                CreateNotificationChannel();
+            }
+        }
+
+        private void CreateNotificationChannel()
+        {
+            var channelId = $"{PackageName}.general";
+            var notificationManager = (NotificationManager)GetSystemService(NotificationService);
+            var channel = new NotificationChannel(channelId, "General", NotificationImportance.Default);
+            notificationManager.CreateNotificationChannel(channel);
+            FirebaseCloudMessagingImplementation.ChannelId = channelId;
         }
 
         protected override void OnResume()
@@ -67,6 +74,7 @@ namespace Products3
             if (HandleIntent(intent))
             {
                 //Redirect to form page if data was extracted sucessfully
+                FirebaseCloudMessagingImplementation.OnNewIntent(_initialIntent);
                 Shell.Current.GoToAsync(nameof(ProductFormPage));
             }
             

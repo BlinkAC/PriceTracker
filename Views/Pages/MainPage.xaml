@@ -27,13 +27,14 @@
             Padding="30,0"
             Spacing="25"
             BackgroundColor="White" >
+            <Button Text="Get Token" BackgroundColor="Aquamarine" Clicked="OnCounterClicked" WidthRequest="80" HeightRequest="80"></Button>
             <CollectionView ItemsSource="{Binding ProductsList}"  Margin="0,30,0,0">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type models:Product}">
                         <VerticalStackLayout>
 
 
-
+                            
                             <Grid Margin="0,0,0,10">
                                 <Grid.RowDefinitions>
                                     <RowDefinition  />
