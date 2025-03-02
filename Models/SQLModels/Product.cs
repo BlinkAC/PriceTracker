@@ -14,6 +14,7 @@ namespace Products3.Models.SQLModels
         public string ProductUrl { get; set; } = string.Empty;
         public string ProductName { get; set; } = string.Empty;
 
+        public bool IsFollowingProduct { get; set; } = false;
         [Ignore]
         public string ProductImage { get; set; } = string.Empty;
 

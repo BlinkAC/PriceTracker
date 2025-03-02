@@ -11,5 +11,11 @@
         Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
+    <ShellContent
+                Title="Product Details"
+                ContentTemplate="{DataTemplate local:ProductDetailsPage}"
+                Route="ProductDetailsPage">
+        
+    </ShellContent>
 
 </Shell>

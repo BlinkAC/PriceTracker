@@ -16,20 +16,22 @@ namespace Products3.Viewmodels
     {
         private readonly IProductsDatabase _database;
         private readonly IToastService _toastService;
+        private readonly IBackendClient _backendClient;
 
         [ObservableProperty]
-        private string productURL;
+        private string productURL = string.Empty;
 
         [ObservableProperty]
-        private string productId;
+        private string productId = string.Empty;
 
         [ObservableProperty]
-        private string productName;
+        private string productName = string.Empty;
 
-        public ProductFormViewModel(IProductsDatabase database, IToastService toastService)
+        public ProductFormViewModel(IProductsDatabase database, IToastService toastService,IBackendClient backendClient)
         {
             _database = database;
             _toastService = toastService;
+            _backendClient = backendClient;
 
             MessagingService.SubscribeToUrlReceivedMessage(this, url =>
             {
@@ -42,22 +44,36 @@ namespace Products3.Viewmodels
             });
         }
 
-        [RelayCommand]
+            [RelayCommand]
         public async Task OnSaveProductButton()
         {
-            var result = await _database.AddProduct(
-                new Models.SQLModels.Product() 
-                  { ProductId = ProductId, 
-                    ProductName = ProductName,
-                    ProductUrl = ProductURL });
-            if(result > 0)
+
+            var token = await _backendClient.GetBackendToken();
+            var checkProductTask = await _backendClient.CheckProductAvailability(ProductId, ProductURL, "ML", token);
+
+            if (checkProductTask.IsSuccessStatusCode)
             {
-                await _toastService.ShowToast("Producto guardado correctamente");
+
+                var result = await _database.AddProduct(
+                new Models.SQLModels.Product()
+                {
+                    ProductId = ProductId,
+                    ProductName = ProductName,
+                    ProductUrl = ProductURL
+                });
+                // Mostrar notificación
+                await _toastService.ShowToast("Producto guardado correctamente", CommunityToolkit.Maui.Core.ToastDuration.Short);
+                // Verificar la disponibilidad del producto
+                
+
+                // Esperar a que todas las tareas asincrónicas se completen
+
+                // Navegar a la página anterior
                 await Shell.Current.GoToAsync("..");
             }
             else
             {
-                await _toastService.ShowToast("Hubo un error al guardar el producto. \nIntenta mas tarde.");
+                await _toastService.ShowToast("Hubo un error al guardar el producto. \nIntenta mas tarde.", CommunityToolkit.Maui.Core.ToastDuration.Short);
                 await Shell.Current.GoToAsync("..");
             }
             

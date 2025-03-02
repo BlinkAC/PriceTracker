@@ -14,6 +14,8 @@ namespace Products3.Interfaces
         AsyncLazy<SQLiteConnection> DbConnection { get; }
         public Task<int> AddProduct(Product product);
 
+        public Task<Product> GetProduct(string productId);
+
         public Task<IEnumerable<Product>> GetProducts();
 
         public Task<int> RemoveProducts(IEnumerable<string> productString);

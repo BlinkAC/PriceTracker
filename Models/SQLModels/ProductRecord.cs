@@ -4,32 +4,39 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Products3.Models.SQLModels
 {
     public record ProductRecord
     {
-        [JsonPropertyName("productId")]
+        [JsonProperty("id")]
         public string ProductId { get; set; } = string.Empty;
-        [JsonPropertyName("productImage")]
+
+        [JsonProperty("productImage")]
         public string ProductImage { get; set; } = string.Empty;
-        [JsonPropertyName("lastUpdateDate")]
+
+        [JsonProperty("lastUpdateDate")]
         public DateTime LastUpdateDate { get; set; }
-        [JsonPropertyName("currentPrice")]
+
+        [JsonProperty("currentPrice")]
         public float ProductCurrentPrice { get; set; }
-        [JsonPropertyName("highestPrice")]
+
+        [JsonProperty("highestPrice")]
         public float ProductHighestPrice { get; set; }
-        [JsonPropertyName("lowestPrice")]
+
+        [JsonProperty("lowestPrice")]
         public float ProductLowestPrice { get; set; }
-        [JsonPropertyName("priceHistory")]
+
+        [JsonProperty("priceHistory")]
         public IEnumerable<ProductHistory> ProductHistory { get; set; } = new List<ProductHistory>();
     }
 
     public record ProductHistory
     {
-        [JsonPropertyName("date")]
+        [JsonProperty("date")]
         public DateTime Date { get; set; }
-        [JsonPropertyName("price")]
+        [JsonProperty("price")]
         public float Price { get; set; }
     }
 

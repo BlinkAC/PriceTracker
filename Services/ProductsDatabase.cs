@@ -65,7 +65,7 @@ namespace Products3.Services
         /// <summary>
         /// Used to remove multiple products at once
         /// </summary>
-        /// <param name="productString"></param>
+        /// <param name="productIds"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public async Task<int> RemoveProducts(IEnumerable<string> productIds)
@@ -82,6 +82,14 @@ namespace Products3.Services
             return rowsAffected;
         }
 
+        public async Task<Product> GetProduct(string productId)
+        {
+            var conn = await _dbConnection;
+            var product = conn.Table<Product>().Where(v => v.ProductId.Equals(productId)).FirstOrDefault();
+
+            return product;
+
+        }
         private int UpdateAll<T>(IEnumerable<T> data, SQLiteConnection conn)
         {
             return conn.UpdateAll(data);

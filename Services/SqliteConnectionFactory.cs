@@ -41,7 +41,7 @@ namespace Products3.Services
                 //	_fileSystem.File.Delete(databasePath);
                 //}
             }
-            /// As a part of ADO 651313, Encryption from database file has been removed for easy troubleshooting.
+            // As a part of ADO 651313, Encryption from database file has been removed for easy troubleshooting.
             var options = new SQLiteConnectionString(databasePath, Flags, true);
             return new SQLiteConnection(options);
         }

@@ -10,5 +10,9 @@ namespace Products3.Viewmodels
     public abstract class BaseViewModel : ObservableObject
     {
         public abstract Task Initialize();
+
+        public virtual void Reset()
+        {
+        }
     }
 }

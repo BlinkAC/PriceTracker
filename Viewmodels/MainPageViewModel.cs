@@ -13,7 +13,7 @@ namespace Products3.Viewmodels
         private readonly IProductsDatabase _database;
         private readonly IBackendClient _backendClient;
         [ObservableProperty]
-        private string rata = "alooooooooooooooooo";
+        private bool isLoading = true;
 
         [ObservableProperty]
         private IEnumerable<Product> productsList = [];
@@ -25,7 +25,6 @@ namespace Products3.Viewmodels
 
             MessagingService.SubscribeToUrlReceivedMessage(this, url =>
             {
-                Rata = url; // Mostrar la URL en la etiqueta
                 System.Diagnostics.Debug.WriteLine("url obtenido: " + url);
             });
         }
@@ -36,8 +35,9 @@ namespace Products3.Viewmodels
             await AppShell.Current.GoToAsync(nameof(ProductDetailsPage) + $"?productId={productId}");
         }
         public override async Task Initialize()  {
-
-            ProductsList = await _database.GetProducts();
+            //await Task.Delay(10000);
+            ProductsList = await _database.GetProducts().ConfigureAwait(false);
+            IsLoading = false;
         }
         //logica cuando agreguen un producto:
         //se le meustra en su apantalla

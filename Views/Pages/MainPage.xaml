@@ -7,7 +7,8 @@
              xmlns:views="clr-namespace:Products3.Views"
              xmlns:local="clr-namespace:Products3.Viewmodels"
              x:DataType="viewmodel:MainPageViewModel"
-             x:Class="Products3.Views.Pages.MainPage">
+             x:Class="Products3.Views.Pages.MainPage"
+                xmlns:core="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core">
     <!--<views:BasePage.Resources>
     xmlns:syncTheme="clr-namespace:Syncfusion.Maui.Themes;assembly=Syncfusion.Maui.Core"
         <ResourceDictionary>
@@ -21,59 +22,71 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </views:BasePage.Resources>-->
-    <ScrollView>
+    <core:SfBusyIndicator IsRunning="{Binding IsLoading}"
+                          AnimationType="Cupertino"
+                          Title="Obteniendo informacion..."
+                          TitlePlacement="Bottom"
+                          DurationFactor="0.2"
+                          IndicatorColor="SkyBlue"
+                          OverlayFill="White"
+                          SizeFactor=".8"
+                          TitleSpacing="20"
+                          FontSize="18">
+        <ScrollView>
 
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25"
-            BackgroundColor="White" >
-            <Button Text="Get Token" BackgroundColor="Aquamarine" Clicked="OnCounterClicked" WidthRequest="80" HeightRequest="80"></Button>
-            <CollectionView ItemsSource="{Binding ProductsList}"  Margin="0,30,0,0">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="{x:Type models:Product}">
-                        <VerticalStackLayout>
+            <!--<VerticalStackLayout
+        Padding="30,0"
+        Spacing="25"
+        BackgroundColor="White" >-->
+                <!--<Button Text="Get Token" BackgroundColor="Aquamarine" Clicked="OnCounterClicked" WidthRequest="80" HeightRequest="80"></Button>-->
+                <CollectionView ItemsSource="{Binding ProductsList}"  Margin="0,30,0,0">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type models:Product}">
+                            <!--<VerticalStackLayout>-->
 
 
-                            
-                            <Grid Margin="0,0,0,10">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition  />
-                                    <RowDefinition  />
-                                    <RowDefinition  />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition  />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
 
-                                <Label Grid.Row="0"
-                                    FontSize="11" TextColor="Black">
-                                    <Label.Text>
-                                        <MultiBinding StringFormat="{}Identificador: {0} Nombre: {1}.">
-                                            <Binding Path="ProductId" FallbackValue="" />
-                                            <Binding Path="ProductName" FallbackValue="" />
-                                        </MultiBinding>
-                                    </Label.Text>
-                                </Label>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition  />
+                                        <RowDefinition  />
+                                        <RowDefinition  />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition  />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
 
-                                <!--<Label Text="Verified:" Grid.Row="1" Grid.Column="0" VerticalOptions="Center" />-->
-                                <!--CheckedChanged="OnProperty1CheckedChanged"-->
-                                <!--<CheckBox IsChecked="{Binding ProductChecked}" Grid.Row="1" Grid.Column="1" VerticalOptions="Center"-->
-                                <!--/>-->
-                                <Button Text="Check history" 
-                                        Grid.Row="1" 
-                                        Grid.Column="1" 
-                                        VerticalOptions="Center" 
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:MainPageViewModel}}, Path=NavigateProductDetailsCommand}"
-                                        CommandParameter="{Binding ProductId}"/>
+                                    <Label Grid.Row="0"
+                                FontSize="11" TextColor="Black">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}Identificador: {0} Nombre: {1}.">
+                                                <Binding Path="ProductId" FallbackValue="" />
+                                                <Binding Path="ProductName" FallbackValue="" />
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
 
-                            </Grid>
+                                    <!--<Label Text="Verified:" Grid.Row="1" Grid.Column="0" VerticalOptions="Center" />-->
+                                    <!--CheckedChanged="OnProperty1CheckedChanged"-->
+                                    <!--<CheckBox IsChecked="{Binding ProductChecked}" Grid.Row="1" Grid.Column="1" VerticalOptions="Center"-->
+                                    <!--/>-->
+                                    <Button Text="Check history" 
+                                    Grid.Row="1" 
+                                    Grid.Column="1" 
+                                    VerticalOptions="Center" 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type local:MainPageViewModel}}, Path=NavigateProductDetailsCommand}"
+                                    CommandParameter="{Binding ProductId}"/>
 
-                        </VerticalStackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </VerticalStackLayout>
-    </ScrollView>
+                                </Grid>
+
+                            <!--</VerticalStackLayout>-->
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            <!--</VerticalStackLayout>-->
+        </ScrollView>
+    </core:SfBusyIndicator>
+    
 
 </views:BasePage>

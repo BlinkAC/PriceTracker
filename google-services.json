@@ -1,21 +1,21 @@
 {
     "project_info": {
-        "project_number": "",
-        "project_id": "",
-        "storage_bucket": ""
+        "project_number": "692148446758",
+        "project_id": "price-tracker-1ce4f",
+        "storage_bucket": "price-tracker-1ce4f.firebasestorage.app"
     },
     "client": [
         {
             "client_info": {
-                "mobilesdk_app_id": "",
+                "mobilesdk_app_id": "1:692148446758:android:a24876f2c9e627ea4328e7",
                 "android_client_info": {
-                    "package_name": ""
+                    "package_name": "com.companyname.products3"
                 }
             },
             "oauth_client": [],
             "api_key": [
                 {
-                    "current_key": ""
+                    "current_key": "AIzaSyC1vtA4g7MWEG8QMIFBn11TqefVBwySe-Y"
                 }
             ],
             "services": {

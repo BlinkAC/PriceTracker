@@ -29,6 +29,7 @@ namespace Products3
                 .UseMauiCommunityToolkit()
                 .ConfigureSyncfusionCore()
                 .RegisterFirebaseServices()
+                .ConfigureSyncfusionCore()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -49,7 +50,7 @@ namespace Products3
             builder.Services.AddSingleton<IToastService, ToastService>();
             builder.Services.AddSingleton<IBackendClient, BackendClientService>();
 
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NMaF1cXmhLYVF+WmFZfVtgdl9GYFZVQGY/P1ZhSXxWdkdhWH5acHRRQmVeWEE=");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NMaF5cXmBCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWXxecXZUR2FdUUF3VkM=");
             RegisterHttpClient(builder);
 #if DEBUG
             builder.Logging.AddDebug();
@@ -62,7 +63,7 @@ namespace Products3
         {
             var services = builder.Services;
 
-            services.AddHttpClient<IBackendClient, BackendClientService>(httpClient => httpClient.BaseAddress = new Uri("http://192.168.100.26:8080/api/"));
+            services.AddHttpClient<IBackendClient, BackendClientService>(httpClient => httpClient.BaseAddress = new Uri("https://aelexyz-pricetracker-products-dphrgff0d6e3h0hh.canadacentral-01.azurewebsites.net"));
                 //.AddHttpMessageHandler<ValidateHeaderHandler>()
                 //.AddRetryPolicy(3);
 
