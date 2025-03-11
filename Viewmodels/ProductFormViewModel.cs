@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Firebase.Auth;
 using Products3.Interfaces;
 using Products3.Services;
+using Products3.Views.Pages;
+using SQLite;
 
 namespace Products3.Viewmodels
 {
@@ -17,6 +20,8 @@ namespace Products3.Viewmodels
         private readonly IProductsDatabase _database;
         private readonly IToastService _toastService;
         private readonly IBackendClient _backendClient;
+        private readonly IUserNotification _notificationService;
+        private readonly FirebaseAuthClient _firebaseAuthClient;
 
         [ObservableProperty]
         private string productURL = string.Empty;
@@ -27,12 +32,13 @@ namespace Products3.Viewmodels
         [ObservableProperty]
         private string productName = string.Empty;
 
-        public ProductFormViewModel(IProductsDatabase database, IToastService toastService,IBackendClient backendClient)
+        public ProductFormViewModel(IProductsDatabase database, IToastService toastService,IBackendClient backendClient, IUserNotification notificationService, FirebaseAuthClient firebaseAuthClient)
         {
             _database = database;
             _toastService = toastService;
             _backendClient = backendClient;
-
+            _notificationService = notificationService;
+            _firebaseAuthClient = firebaseAuthClient;
             MessagingService.SubscribeToUrlReceivedMessage(this, url =>
             {
                 var productData = url.Split(",");
@@ -47,39 +53,57 @@ namespace Products3.Viewmodels
             [RelayCommand]
         public async Task OnSaveProductButton()
         {
-
-            var token = await _backendClient.GetBackendToken();
-            var checkProductTask = await _backendClient.CheckProductAvailability(ProductId, ProductURL, "ML", token);
-
-            if (checkProductTask.IsSuccessStatusCode)
+            try
             {
+                var token = await _backendClient.GetBackendToken();
+                var checkProductTask = await _backendClient.CheckProductAvailability(ProductId, ProductURL, "ML", token);
 
-                var result = await _database.AddProduct(
-                new Models.SQLModels.Product()
+                checkProductTask.EnsureSuccessStatusCode();
+                if (checkProductTask.IsSuccessStatusCode)
                 {
-                    ProductId = ProductId,
-                    ProductName = ProductName,
-                    ProductUrl = ProductURL
-                });
-                // Mostrar notificación
-                await _toastService.ShowToast("Producto guardado correctamente", CommunityToolkit.Maui.Core.ToastDuration.Short);
-                // Verificar la disponibilidad del producto
-                
 
-                // Esperar a que todas las tareas asincrónicas se completen
-
-                // Navegar a la página anterior
-                await Shell.Current.GoToAsync("..");
+                    var result = await _database.AddProduct(
+                    new Models.SQLModels.Product()
+                    {
+                        ProductId = ProductId,
+                        ProductName = ProductName,
+                        ProductUrl = ProductURL
+                    });
+                    // Mostrar notificación
+                    await _notificationService.HandleToastNavigationAsync("Producto guardado correctamente",
+                                                                            CommunityToolkit.Maui.Core.ToastDuration.Short,
+                                                                            $"//{nameof(MainPage)}");
+                }
             }
-            else
+            catch (HttpRequestException httpEx)
             {
-                await _toastService.ShowToast("Hubo un error al guardar el producto. \nIntenta mas tarde.", CommunityToolkit.Maui.Core.ToastDuration.Short);
-                await Shell.Current.GoToAsync("..");
+                await _notificationService.HandleToastNavigationAsync("Hubo un error al guardar el producto. \nIntenta mas tarde.",
+                                             CommunityToolkit.Maui.Core.ToastDuration.Short,
+                                             $"//{nameof(MainPage)}");
             }
-            
+            catch (SQLiteException sqliteEx)
+            {
+                if(sqliteEx.Message.Contains("UNIQUE constraint failed"))
+                {
+                    await _notificationService.HandleToastNavigationAsync("No puedes agregar el mismo producto a tu lista",
+                                                             CommunityToolkit.Maui.Core.ToastDuration.Short,
+                                                             $"//{nameof(MainPage)}");
+                }
+                
+            }
+
+
         }
 
-        public override async Task Initialize() => await Task.Delay(0);
+        public override async Task Initialize()
+        {
+            if(_firebaseAuthClient.User.Uid == null)
+            {
+                await _notificationService.HandleToastNavigationAsync("Debes iniciar sesion para agregar productos",
+                                                             CommunityToolkit.Maui.Core.ToastDuration.Short,
+                                                             $"//{nameof(MainPage)}");
+            }
+        }
     }
 }
 

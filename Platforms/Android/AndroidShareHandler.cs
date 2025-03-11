@@ -19,8 +19,8 @@ namespace Products3.Platforms.Android
             if (androidIntent?.Action == Intent.ActionSend && androidIntent.Type == "text/plain")
             {
                     var data = androidIntent?.ClipData?.GetItemAt(0);
-                    var urlReceived = data.Text;
-                    var retrievedItem = ExtractProductInfo(urlReceived);
+                    var urlReceived = data!.Text;
+                    var retrievedItem = ExtractProductInfo(urlReceived!);
                 if (retrievedItem != null)
                 {
                     MessagingService.SendUrlReceivedMessage(string.Join(",", [retrievedItem.Item2, retrievedItem.Item1, urlReceived]));
@@ -41,30 +41,34 @@ namespace Products3.Platforms.Android
         {
             var patterns = new string[]
             {
-            @"\/([^\/]+)\/p\/([^\/]+)", // Pattern for URLs with /p/
-            @"\/(MLM-\d+)-([^\/_]+)"   // Pattern for URLs with -\/([^\/]+?)-([^\/]+)
+             @"\/([^\/]+)\/p\/([^\/?]+)",  // Pattern for URLs with /p/ and stops before ?
+            @"\/(MLM-\d+)-([^\/_]+)"
             };
-            if (!string.IsNullOrEmpty(url))
-                foreach (var pattern in patterns)
-                {
-                    var match = Regex.Match(url, pattern);
-                    if (match.Success)
-                    {
-                        string part1 = match.Groups[1].Value;
-                        string part2 = match.Groups[2].Value;
 
-                        //Mercado libre specific - depending on the url format the values came swapped
-                        if (part1.Contains("MLM"))
+
+                if (!string.IsNullOrEmpty(url))
+                {
+                    foreach (var pattern in patterns)
+                    {
+                        var match = Regex.Match(url, pattern);
+                        if (match.Success)
                         {
-                            return Tuple.Create(part1.Replace("-", ""), part2.Replace("-", " "));
-                        }
-                        else
-                        {
-                            return Tuple.Create(part2, part1.Replace("-", " "));
+                            string part1 = match.Groups[1].Value;
+                            string part2 = match.Groups[2].Value;
+
+                            //Mercado libre specific - depending on the url format the values came swapped
+                            if (part1.Contains("MLM"))
+                            {
+                                return Tuple.Create(part1.Replace("-", ""), part2.Replace("-", " "));
+                            }
+                            else
+                            {
+                                return Tuple.Create(part2, part1.Replace("-", " "));
+                            }
                         }
                     }
                 }
-            return null;
+            return null!;
         }
     }
 }

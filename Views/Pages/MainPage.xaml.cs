@@ -42,6 +42,12 @@ namespace Products3.Views.Pages
             base.OnAppearing();
             await _viewModel.Initialize();
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            // Simplemente retorna true para desactivar el botón de retroceso
+            return true;
+        }
     }
 
 }

@@ -21,7 +21,7 @@ namespace Products3.Views.Pages
         {
             base.OnDisappearing();
             // Liberar recursos o desuscribir eventos si es necesario
-            _viewModel.Reset();
+           // _viewModel.Reset();
         }
 
     }

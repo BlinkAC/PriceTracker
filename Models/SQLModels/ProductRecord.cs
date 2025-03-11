@@ -28,6 +28,9 @@ namespace Products3.Models.SQLModels
         [JsonProperty("lowestPrice")]
         public float ProductLowestPrice { get; set; }
 
+        [JsonProperty("isUserSubscribed")]
+        public int? IsUserSubscribed { get; set; }
+
         [JsonProperty("priceHistory")]
         public IEnumerable<ProductHistory> ProductHistory { get; set; } = new List<ProductHistory>();
     }

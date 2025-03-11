@@ -7,15 +7,15 @@ namespace Products3
         {
             InitializeComponent();
 
-            //MainPage = new AppShell();
+            MainPage = new AppShell();
         }
 
-        protected override Window CreateWindow(IActivationState? activationState)
-        {
-            //var window = base.CreateWindow(activationState);
-            // Configurar ventana si es necesario
-            return new Window(new AppShell());
-            // return new Window(new AppShell());
-        }
+        //protected override Window CreateWindow(IActivationState? activationState)
+        //{
+        //    //var window = base.CreateWindow(activationState);
+        //    // Configurar ventana si es necesario
+        //    return new Window(new AppShell());
+        //    // return new Window(new AppShell());
+        //}
     }
 }

@@ -13,7 +13,7 @@ namespace Products3.Views
         {
             base.OnBindingContextChanged();
 
-            await (this.BindingContext as BaseViewModel).Initialize();
+            await (this.BindingContext as BaseViewModel)!.Initialize();
         }
 
         protected override void OnAppearing()

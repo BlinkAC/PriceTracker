@@ -9,6 +9,19 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="Button">
+                <Setter Property="BackgroundColor" 
+                    Value="{AppThemeBinding Light=LightBlue, Dark=#49CB}" />
+                <Setter Property="TextColor"
+                    Value="{AppThemeBinding Light=Black, Dark=White}" />
+            </Style>
+
+            <Style TargetType="Entry">
+                <Setter Property="BackgroundColor" 
+                Value="{AppThemeBinding Light=#F5F8FF, Dark=#49CB}" />
+
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

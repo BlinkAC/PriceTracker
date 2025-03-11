@@ -8,14 +8,23 @@
     Title="Products3">
 
     <ShellContent
-        Title="Home"
+        Title="Inicio de sesión"
+        
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
-    <ShellContent
+    <!--<ShellContent
                 Title="Product Details"
                 ContentTemplate="{DataTemplate local:ProductDetailsPage}"
-                Route="ProductDetailsPage">
-        
-    </ShellContent>
+                Route="ProductDetailsPage" />-->
+    <!--<ShellContent
+                Title="Login"
+                ContentTemplate="{DataTemplate local:LoginPage}"
+                Route="LoginPage"/>-->
+    <!--<ShellContent
+                Title="Register"
+                ContentTemplate="{DataTemplate local:RegisterPage}"
+                Route="RegisterPage"/>-->
+
+
 
 </Shell>

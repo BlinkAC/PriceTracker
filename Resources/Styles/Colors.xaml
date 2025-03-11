@@ -28,6 +28,11 @@
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
 
+    <Color x:Key="ButtonBlue">#4988DA</Color>
+    <Color x:Key="ButtonGrey">#CBD2DB</Color>
+    <Color x:Key="DarkBlue">#16233F</Color>
+    <Color x:Key="LightGray">#b0292991</Color> 
+    
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>

@@ -8,39 +8,97 @@
     xmlns:viewmodel="clr-namespace:Products3.Viewmodels"
     xmlns:views="clr-namespace:Products3.Views"
     x:DataType="viewmodel:ProductFormViewModel"
-    x:Class="Products3.Views.Pages.ProductFormPage">
-    <ScrollView>
-        <VerticalStackLayout>
-            <Label Text="Product Id:"/>
+    x:Class="Products3.Views.Pages.ProductFormPage"
+    Shell.NavBarIsVisible="False">
+    <VerticalStackLayout>
+        <Label Text="Comenzar a seguir producto: " TextColor="{AppThemeBinding Light=Black, Dark=White}" FontSize="17" FontAttributes="Bold"
+               Margin="15,25"/>
+        <Grid HorizontalOptions="Fill" VerticalOptions="StartAndExpand"
+      Margin="15,50,15,20"
+      RowSpacing="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Text="Product Id:" TextColor="{AppThemeBinding Light=Black, Dark=White}" Grid.Column="0" Grid.Row="0" VerticalOptions="End"/>
             <Entry 
-                x:Name="productIdEntry"
-                Text="{Binding ProductId}"
-                IsEnabled="False"
-                Margin="0,0,0,50"/>
+            x:Name="productIdEntry"
+            Text="{Binding ProductId}"
+            IsEnabled="False"
+            TextColor="{AppThemeBinding Light=Black, Dark=White}"      
+            Grid.Column="0" 
+                HeightRequest="50"
+            Grid.Row="1"/>
+
+            <Label Text="Product Name:" TextColor="{AppThemeBinding Light=Black, Dark=White}"
+            Grid.Column="0" 
+            Grid.Row="2"
+           VerticalOptions="End"
+           Margin="0,50,0,0"/>
             
-            <Label Text="Product Name:"/>
             <Entry 
-                x:Name="productNameEntry"
-                Text="{Binding ProductName}"
-                IsEnabled="False"
-                Margin="0,0,0,50"/>
-            
-            <Label Text="Product url:"/>
+            x:Name="productNameEntry"
+            Text="{Binding ProductName}"
+            HorizontalTextAlignment ="Center"
+            IsEnabled="False"
+            TextColor="{AppThemeBinding Light=Black, Dark=White}"
+            Grid.Column="0" 
+            Grid.Row="3"
+                HeightRequest="50"
+            Margin="0,5,0,0"/>
+
+            <Label Text="Product url:"
+            TextColor="{AppThemeBinding Light=Black, Dark=White}"
+            Grid.Column="0" 
+            Grid.Row="4"
+           VerticalOptions="End"
+           Margin="0,50,0,0"/>
             <Entry 
-                x:Name="productUrlEntry"
-                Text="{Binding ProductURL}"
-                MaximumHeightRequest="250"
-                MaximumWidthRequest="250"
-                MinimumWidthRequest="250"
-                MinimumHeightRequest="250"
-                IsEnabled="False"
-                Margin="0,0,0,50"/>
+            x:Name="productUrlEntry"
+            Text="{Binding ProductURL}"
+            IsEnabled="False"
+        HorizontalOptions="StartAndExpand"
+                HeightRequest="50"
+             TextColor="{AppThemeBinding Light=Black, Dark=White}"
+            Grid.Column="0" 
+            Grid.Row="5"
+        Margin="0,5,0,0"/>
 
             <Button
-                x:Name="saveProdductButton"
-                Text="Guardar producto" 
-                Command="{Binding SaveProductButtonCommand}"
-                HorizontalOptions="Fill" />
-        </VerticalStackLayout>
-    </ScrollView>
+            x:Name="saveProdductButton"
+            Text="Guardar producto" 
+            Command="{Binding SaveProductButtonCommand}"
+            HorizontalOptions="Fill"
+        HeightRequest="50"
+                        TextColor="{AppThemeBinding Light=Black, Dark=White}"
+            Grid.Column="0" 
+            Grid.Row="6"
+        VerticalOptions="End"
+        Margin="0,20,0,0"/>
+
+            <Button
+    x:Name="CancelButton"
+    Text="Cancelar" 
+    Command="{Binding SaveProductButtonCommand}"
+    HorizontalOptions="Fill"
+HeightRequest="50"
+                TextColor="{AppThemeBinding Light=Black, Dark=White}"
+    Grid.Column="0" 
+    Grid.Row="7"
+VerticalOptions="End"
+Margin="0,20,0,0"/>
+
+        </Grid>
+    </VerticalStackLayout>
+    
 </views:BasePage>

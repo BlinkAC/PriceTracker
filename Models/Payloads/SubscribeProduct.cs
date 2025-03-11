@@ -9,8 +9,8 @@ namespace Products3.Models.Payloads
 {
     public class SubscribeProduct
     {
-        [JsonProperty("productId")]
-        public string ProductId { get; set; } = string.Empty;
+        [JsonProperty("productsId")]
+        public IEnumerable<string> ProductsId { get; set; } = [];
         [JsonProperty("fcmToken")]
         public string FcmToken { get; set; } = string.Empty;
         [JsonProperty("productStore")]

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<views:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sfPopup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
+             xmlns:core="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+             xmlns:viewmodel="clr-namespace:Products3.Viewmodels"
+             xmlns:views="clr-namespace:Products3.Views"
+             xmlns:local="clr-namespace:Products3.Converters"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="viewmodel:LoginPageViewModel"
+                Shell.NavBarIsVisible="False"
+             x:Class="Products3.Views.Pages.LoginPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid ColumnDefinitions="*" RowDefinitions="200,*,150">
+        <VerticalStackLayout Grid.Row="0">
+            <Image HorizontalOptions="StartAndExpand" Source="shape.png" />
+        </VerticalStackLayout>
+        <VerticalStackLayout Grid.Row="1">
+            <VerticalStackLayout>
+                <Label 
+                    Text="Iniciar Sesión"
+                    
+                    FontFamily="PoppinsSemiBold"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Padding="15" Spacing="20">
+                <Entry
+
+                    HeightRequest="55" 
+                    BackgroundColor="White" 
+
+                    Text="{Binding LoginModel.Email}"
+                    Placeholder="Enter your Email">
+                    <Entry.Behaviors>
+                        <toolkit:EmailValidationBehavior
+                            MinimumLength="1"
+                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                            ValidStyle="{StaticResource ValidEntryStyle}"
+                            Flags="ValidateOnValueChanged"/>
+                    </Entry.Behaviors>
+                </Entry>
+                <Entry 
+
+                    HeightRequest="55" 
+                    BackgroundColor="White" 
+                    
+                    Text="{Binding LoginModel.Password}"
+                    Placeholder="Enter password" 
+                    IsPassword="True">
+                    <Entry.Behaviors>
+                        <toolkit:TextValidationBehavior  
+                                InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                ValidStyle="{StaticResource ValidEntryStyle}"
+                                MinimumLength="1"
+                                MaximumLength="30"/>
+                    </Entry.Behaviors>
+                </Entry>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+        <VerticalStackLayout Grid.Row="2" Padding="15">
+            <Button 
+                Command="{Binding GotoHomePageCommand}"
+                Text="Login" ></Button>
+            <HorizontalStackLayout HorizontalOptions="Center" Margin="0,20,0,0">
+                <Label 
+                    FontSize="15"
+                    Text="Don't have an account ? " />
+                <Button  
+                    Margin="0,-11,0,0"
+                    Command="{Binding GotoRegisterPageCommand}"
+                    Style="{StaticResource FakeHyperlink}"
+                    Text="Register"/>
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </Grid>
+</views:BasePage>
+
