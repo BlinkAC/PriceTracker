@@ -6,12 +6,17 @@
     xmlns:local="clr-namespace:Products3.Views.Pages"
     Shell.FlyoutBehavior="Disabled"
     Title="Products3">
+    
+    <!-- Página Principal -->
+    <ShellContent Route="MainPage" Title="Inicio" ContentTemplate="{DataTemplate local:MainPage}" />
+    
+    <ShellContent Route="LoginPage" Title="Login" ContentTemplate="{DataTemplate local:LoginPage}" />
 
-    <ShellContent
-        Title="Inicio de sesión"
-        
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <!-- Página de Registro -->
+    <ShellContent Route="RegisterPage" Title="Registro" ContentTemplate="{DataTemplate local:RegisterPage}" />
+
+    
+    
     <!--<ShellContent
                 Title="Product Details"
                 ContentTemplate="{DataTemplate local:ProductDetailsPage}"

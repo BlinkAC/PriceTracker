@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Products3.Interfaces;
+using Products3.Models.Authentication;
 
 
 namespace Products3.Services
@@ -21,14 +23,15 @@ namespace Products3.Services
         }
         public async Task SendVerificationEmail(string idToken)
         {
-            var payload = new
-            {
-                requestType = "VERIFY_EMAIL",
-                idToken = idToken
-            };
 
-            var jsonPayload = System.Text.Json.JsonSerializer.Serialize(payload);
-            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+            var bodyContent = new MailVerificationModel()
+            {
+                IdToken = idToken,
+                RequestType = "VERIFY_EMAIL"
+            };
+            var objAsJson = JsonConvert.SerializeObject(bodyContent);
+            var content = new StringContent(objAsJson, Encoding.UTF8, "application/json");
+
             var response = await _httpClient.PostAsync(_httpClient.BaseAddress + $"?key={_firebaseAppKey}", content);
 
             if (response.IsSuccessStatusCode)

@@ -11,16 +11,20 @@
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="Button">
+                <Setter Property="HeightRequest" 
+                    Value="50" />
                 <Setter Property="BackgroundColor" 
                     Value="{AppThemeBinding Light=LightBlue, Dark=#49CB}" />
                 <Setter Property="TextColor"
                     Value="{AppThemeBinding Light=Black, Dark=White}" />
+                
             </Style>
 
             <Style TargetType="Entry">
                 <Setter Property="BackgroundColor" 
                 Value="{AppThemeBinding Light=#F5F8FF, Dark=#49CB}" />
-
+                <Setter Property="PlaceholderColor"  Value="{AppThemeBinding Light=Black, Dark=White}"/>
+                <Setter Property="TextColor"  Value="{AppThemeBinding Light=Black, Dark=White}"/>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

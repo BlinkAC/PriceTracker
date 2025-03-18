@@ -16,111 +16,120 @@
             <local:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    <Grid ColumnDefinitions="*" RowDefinitions="200,*,150">
-        <VerticalStackLayout Grid.Row="0">
-            <Image HorizontalOptions="StartAndExpand" Source="shape.png" />
-        </VerticalStackLayout>
-        <VerticalStackLayout Grid.Row="1">
-            <VerticalStackLayout>
-                <Label 
-                    Text="Welcome to Onboard!"
-                   
-                    FontFamily="PoppinsSemiBold"
-                    HorizontalOptions="Center" />
-                <Label 
-                    HorizontalTextAlignment="Center"
-                    Margin="0,25,0,0"
-                    WidthRequest="180"
-                    Text="Let's help to meet up your tasks."
-                    HorizontalOptions="Center" />
+    <core:SfBusyIndicator IsRunning="{Binding IsLoading}"
+                          AnimationType="Cupertino"
+                          Title="{Binding ActivityIndicatorText}"
+                          TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                          TitlePlacement="Bottom"
+                          DurationFactor="0.2"
+                          IndicatorColor="{AppThemeBinding Light=SkyBlue, Dark=#49CB}"
+                          OverlayFill="{AppThemeBinding Light=White, Dark=Black}"
+                          SizeFactor=".8"
+                          TitleSpacing="20"
+                          FontSize="18"
+                          >
+        <Grid ColumnDefinitions="*" RowDefinitions="200,*,150">
+            <VerticalStackLayout Grid.Row="0">
+                <Image HorizontalOptions="StartAndExpand" Source="shape.png" />
             </VerticalStackLayout>
-            <VerticalStackLayout Padding="15" Spacing="20">
-                <Entry
-                    HeightRequest="55" 
-                    BackgroundColor="White"
-                    x:Name="Name"
-                    Text="{Binding RegisterModel.Name, Mode=TwoWay}"
-                    Placeholder="Enter your name">
-                    <Entry.Behaviors>
-                        <toolkit:TextValidationBehavior  
+            <VerticalStackLayout Grid.Row="1">
+                <VerticalStackLayout>
+                    <Label 
+                Text="Crea una cuenta!"
+                FontSize="20"
+                FontFamily="PoppinsSemiBold"
+                HorizontalOptions="Center" />
+                    <Label 
+                HorizontalTextAlignment="Center"
+                Margin="0,25,0,0"
+                WidthRequest="300"
+                Text="Al crear una cuenta podras seguir el precio de los producstes que desees asi como recibir notificaciones cuando estos bajen de precio."
+                HorizontalOptions="Center" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Padding="15" Spacing="20">
+                    <Entry
+                HeightRequest="55" 
+                x:Name="Name"
+                Text="{Binding RegisterModel.Name, Mode=TwoWay}"
+                Placeholder="Nombre de usuario">
+                        <Entry.Behaviors>
+                            <toolkit:TextValidationBehavior  
+                        InvalidStyle="{StaticResource InvalidEntryStyle}"
+                        ValidStyle="{StaticResource ValidEntryStyle}"
+                        MinimumLength="1"
+                        MaximumLength="30"/>
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Entry
+                HeightRequest="55"          
+                x:Name="Email"
+                Text="{Binding RegisterModel.Email, Mode=TwoWay}"
+                Placeholder="Correo electronico">
+                        <Entry.Behaviors>
+                            <toolkit:EmailValidationBehavior 
+                        MinimumLength="1"
+                        InvalidStyle="{StaticResource InvalidEntryStyle}"
+                        ValidStyle="{StaticResource ValidEntryStyle}"
+                        Flags="ValidateOnValueChanged"/>
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Entry
+                HeightRequest="55" 
+                x:Name="Password"
+                Placeholder="Contraseña"  
+                Text="{Binding RegisterModel.Password, Mode=TwoWay}"
+                IsPassword="True">
+                        <Entry.Behaviors>
+                            <toolkit:TextValidationBehavior  
                             InvalidStyle="{StaticResource InvalidEntryStyle}"
                             ValidStyle="{StaticResource ValidEntryStyle}"
                             MinimumLength="1"
                             MaximumLength="30"/>
-                    </Entry.Behaviors>
-                </Entry>
-                <Entry
-                    HeightRequest="55" 
-                    BackgroundColor="White" 
-                    
-                    x:Name="Email"
-                    Text="{Binding RegisterModel.Email, Mode=TwoWay}"
-                    Placeholder="Enter your email">
-                    <Entry.Behaviors>
-                        <toolkit:EmailValidationBehavior 
-                            MinimumLength="1"
-                            InvalidStyle="{StaticResource InvalidEntryStyle}"
-                            ValidStyle="{StaticResource ValidEntryStyle}"
-                            Flags="ValidateOnValueChanged"/>
-                    </Entry.Behaviors>
-                </Entry>
-                <Entry
-                    HeightRequest="55" 
-                    BackgroundColor="White" 
-                    x:Name="Password"
-                    Placeholder="Enter password"  
-                    Text="{Binding RegisterModel.Password, Mode=TwoWay}"
-                    IsPassword="True">
-                    <Entry.Behaviors>
-                        <toolkit:TextValidationBehavior  
-                                InvalidStyle="{StaticResource InvalidEntryStyle}"
-                                ValidStyle="{StaticResource ValidEntryStyle}"
-                                MinimumLength="1"
-                                MaximumLength="30"/>
-                    </Entry.Behaviors>
-                </Entry>
-                <Entry
-                    HeightRequest="55"
-                    BackgroundColor="White" 
-                    x:Name="ConfirmPassword"
-                    Text="{Binding RegisterModel.ConfirmPassword, Mode=TwoWay}"
-                    Placeholder="Confirm password" IsPassword="True">
-                    <Entry.Behaviors>
-                        <toolkit:TextValidationBehavior  
-                            InvalidStyle="{StaticResource InvalidEntryStyle}"
-                            ValidStyle="{StaticResource ValidEntryStyle}"
-                            MinimumLength="1"
-                            MaximumLength="30"/>
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Entry
+                HeightRequest="55"
+                x:Name="ConfirmPassword"
+                Text="{Binding RegisterModel.ConfirmPassword, Mode=TwoWay}"
+                Placeholder="Confirmar contraseña" IsPassword="True" >
+                        <Entry.Behaviors>
+                            <toolkit:TextValidationBehavior  
+                        InvalidStyle="{StaticResource InvalidEntryStyle}"
+                        ValidStyle="{StaticResource ValidEntryStyle}"
+                        MinimumLength="1"
+                        MaximumLength="30"/>
 
-                    </Entry.Behaviors>
-                </Entry>
+                        </Entry.Behaviors>
+                    </Entry>
+                </VerticalStackLayout>
             </VerticalStackLayout>
-        </VerticalStackLayout>
-        <VerticalStackLayout Grid.Row="2" Padding="15">
-            <Button Text="Register"  Command="{Binding RegisterCommand}" >
-                <Button.Triggers>
-                    <MultiTrigger TargetType="Button">
-                        <MultiTrigger.Conditions>
-                            <BindingCondition Binding="{Binding Source={x:Reference Name}, Path=Text.Length}" Value="0"/>
-                            <BindingCondition Binding="{Binding Source={x:Reference Email}, Path=Text.Length}" Value="0" />
-                            <BindingCondition Binding="{Binding Source={x:Reference Password}, Path=Text.Length}" Value="0" />
-                            <BindingCondition Binding="{Binding Source={x:Reference ConfirmPassword}, Path=Text.Length}" Value="0" />
-                        </MultiTrigger.Conditions>
-                        <Setter Property="IsEnabled" Value="False" />
-                    </MultiTrigger>
-                </Button.Triggers>
-            </Button>
-            <HorizontalStackLayout HorizontalOptions="Center" Margin="0,20,0,0">
-                <Label 
-                    
-                    FontSize="15"
-                    Text="Already have an account ? " />
-                <Button 
-                    Margin="0,-11,0,0"
-                    Command="{Binding GotoLoginPageCommand}"
-                    Style="{StaticResource FakeHyperlink}"
-                    Text="Iniciar sesión" />
-            </HorizontalStackLayout>
-        </VerticalStackLayout>
-    </Grid>
+            <VerticalStackLayout Grid.Row="2" Padding="15">
+                <Button Text="Registrar cuenta"  Command="{Binding RegisterCommand}" >
+                    <Button.Triggers>
+                        <MultiTrigger TargetType="Button">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding Source={x:Reference Name}, Path=Text.Length}" Value="0"/>
+                                <BindingCondition Binding="{Binding Source={x:Reference Email}, Path=Text.Length}" Value="0" />
+                                <BindingCondition Binding="{Binding Source={x:Reference Password}, Path=Text.Length}" Value="0" />
+                                <BindingCondition Binding="{Binding Source={x:Reference ConfirmPassword}, Path=Text.Length}" Value="0" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False" />
+                        </MultiTrigger>
+                    </Button.Triggers>
+                </Button>
+                <HorizontalStackLayout HorizontalOptions="Center" Margin="0,20,0,0">
+                    <Label 
+                
+                FontSize="15"
+                Text="Ya tienes una cuenta? " />
+                    <Button 
+                Margin="0,-11,0,0"
+                Command="{Binding GotoLoginPageCommand}"
+                Style="{StaticResource FakeHyperlink}"
+                Text="Iniciar sesión" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Grid>
+    </core:SfBusyIndicator>
+    
 </views:BasePage>

@@ -8,7 +8,7 @@
         <Setter Property="TextColor" Value="Red" />
     </Style>
     <Style x:Key="ValidEntryStyle" TargetType="Entry">
-        <Setter Property="TextColor" Value="{StaticResource PrimaryDarkText}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light=Black, Dark=White}" />
     </Style>
     
     <Style x:Key="FakeHyperlink" TargetType="Button">

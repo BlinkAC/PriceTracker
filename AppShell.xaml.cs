@@ -18,17 +18,23 @@ namespace Products3
             //CheckUserAuthentication();
         }
 
+        protected override bool OnBackButtonPressed()
+        {
+            // Obtén la página actual en la que el usuario se encuentra
+            var currentPage = Shell.Current?.CurrentPage;
 
-        //private async void CheckUserAuthentication()
-        //{
-        //    var authToken = await SecureStorage.GetAsync("UserId");
+            // Si estamos en la página de registro (RegisterPage) o login (LoginPage)
+            if (currentPage is RegisterPage || currentPage is LoginPage)
+            {
+                // Regresar a LoginPage, que es la página principal cuando el usuario no está autenticado
+                Shell.Current.GoToAsync("//LoginPage");
+                return true; // Prevenir el comportamiento predeterminado (cerrar la app)
+            }
 
-        //    if (!string.IsNullOrEmpty(authToken))
-        //    {
-        //        // Redirigir a la página principal
-        //        await Shell.Current.GoToAsync(nameof(MainPage));
-        //    }
-        //}
+            // Si no estamos en LoginPage o RegisterPage, entonces se maneja la navegación estándar
+            return base.OnBackButtonPressed();
+        }
+
 
     }
 }

@@ -13,6 +13,8 @@ using Firebase.Auth.Providers;
 using Firebase.Auth;
 using Firebase.Auth.Repository;
 using Microsoft.Extensions.DependencyInjection;
+using Products3.States;
+
 
 
 
@@ -44,6 +46,7 @@ namespace Products3
             using var stream = assembly.GetManifestResourceStream("Products3.appsettings.json");
             builder.Configuration.AddJsonStream(stream!);
 
+            builder.Services.AddSingleton<State>();
             builder.Services.AddSingleton<MainPageViewModel>();
             builder.Services.AddSingleton<MainPage>();//ProductFormPage
 

@@ -15,68 +15,80 @@
             <local:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    <Grid ColumnDefinitions="*" RowDefinitions="200,*,150">
-        <VerticalStackLayout Grid.Row="0">
-            <Image HorizontalOptions="StartAndExpand" Source="shape.png" />
-        </VerticalStackLayout>
-        <VerticalStackLayout Grid.Row="1">
-            <VerticalStackLayout>
-                <Label 
-                    Text="Iniciar Sesión"
-                    
-                    FontFamily="PoppinsSemiBold"
-                    HorizontalOptions="Center" />
+    <core:SfBusyIndicator IsRunning="{Binding IsLoading}"
+                          AnimationType="Cupertino"
+                          Title="{Binding ActivityIndicatorText}"
+                          TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                          TitlePlacement="Bottom"
+                          DurationFactor="0.2"
+                          IndicatorColor="{AppThemeBinding Light=SkyBlue, Dark=#49CB}"
+                          OverlayFill="{AppThemeBinding Light=White, Dark=Black}"
+                          SizeFactor=".8"
+                          TitleSpacing="20"
+                          FontSize="18"
+                          >
+        <Grid ColumnDefinitions="*" RowDefinitions="200,*,150">
+            <VerticalStackLayout Grid.Row="0">
+                <Image HorizontalOptions="StartAndExpand" Source="shape.png" />
             </VerticalStackLayout>
-            <VerticalStackLayout Padding="15" Spacing="20">
-                <Entry
+            <VerticalStackLayout Grid.Row="1">
+                <VerticalStackLayout>
+                    <Label 
+                Text="Iniciar Sesión"
+                
+                FontFamily="PoppinsSemiBold"
+                HorizontalOptions="Center" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Padding="15" Spacing="20">
+                    <Entry
 
-                    HeightRequest="55" 
-                    BackgroundColor="White" 
+                HeightRequest="55" 
 
-                    Text="{Binding LoginModel.Email}"
-                    Placeholder="Enter your Email">
-                    <Entry.Behaviors>
-                        <toolkit:EmailValidationBehavior
-                            MinimumLength="1"
+                Text="{Binding LoginModel.Email}"
+                Placeholder="Ingresa tu correo">
+                        <Entry.Behaviors>
+                            <toolkit:EmailValidationBehavior
+                        MinimumLength="1"
+                        InvalidStyle="{StaticResource InvalidEntryStyle}"
+                        ValidStyle="{StaticResource ValidEntryStyle}"
+                        Flags="ValidateOnValueChanged"/>
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Entry 
+
+                HeightRequest="55" 
+                
+                Text="{Binding LoginModel.Password}"
+                Placeholder="Contraseña" 
+                IsPassword="True">
+                        <Entry.Behaviors>
+                            <toolkit:TextValidationBehavior  
                             InvalidStyle="{StaticResource InvalidEntryStyle}"
                             ValidStyle="{StaticResource ValidEntryStyle}"
-                            Flags="ValidateOnValueChanged"/>
-                    </Entry.Behaviors>
-                </Entry>
-                <Entry 
-
-                    HeightRequest="55" 
-                    BackgroundColor="White" 
-                    
-                    Text="{Binding LoginModel.Password}"
-                    Placeholder="Enter password" 
-                    IsPassword="True">
-                    <Entry.Behaviors>
-                        <toolkit:TextValidationBehavior  
-                                InvalidStyle="{StaticResource InvalidEntryStyle}"
-                                ValidStyle="{StaticResource ValidEntryStyle}"
-                                MinimumLength="1"
-                                MaximumLength="30"/>
-                    </Entry.Behaviors>
-                </Entry>
+                            MinimumLength="1"
+                            MaximumLength="30"/>
+                        </Entry.Behaviors>
+                    </Entry>
+                </VerticalStackLayout>
             </VerticalStackLayout>
-        </VerticalStackLayout>
-        <VerticalStackLayout Grid.Row="2" Padding="15">
-            <Button 
-                Command="{Binding GotoHomePageCommand}"
-                Text="Login" ></Button>
-            <HorizontalStackLayout HorizontalOptions="Center" Margin="0,20,0,0">
-                <Label 
-                    FontSize="15"
-                    Text="Don't have an account ? " />
-                <Button  
-                    Margin="0,-11,0,0"
-                    Command="{Binding GotoRegisterPageCommand}"
-                    Style="{StaticResource FakeHyperlink}"
-                    Text="Register"/>
-            </HorizontalStackLayout>
+            <VerticalStackLayout Grid.Row="2" Padding="15">
+                <Button 
+            Command="{Binding GotoHomePageCommand}"
+            Text="Login" ></Button>
+                <HorizontalStackLayout HorizontalOptions="Center" Margin="0,20,0,0">
+                    <Label 
+                FontSize="15"
+                Text="No tienes una cuenta ? " />
+                    <Button  
+                Margin="0,-11,0,0"
+                Command="{Binding GotoRegisterPageCommand}"
+                Style="{StaticResource FakeHyperlink}"
+                Text="Registrarse"/>
+                </HorizontalStackLayout>
 
-        </VerticalStackLayout>
-    </Grid>
+            </VerticalStackLayout>
+        </Grid>
+    </core:SfBusyIndicator>
+    
 </views:BasePage>
 

@@ -6,14 +6,21 @@
 	xmlns:viewmodel="clr-namespace:Products3.Viewmodels"
 	xmlns:views="clr-namespace:Products3.Views"
 	xmlns:local="clr-namespace:Products3.Viewmodels"
+     xmlns:converter="clr-namespace:Products3.Converters"
              x:DataType="viewmodel:MainPageViewModel"
              x:Class="Products3.Views.Pages.MainPage"
 	xmlns:core="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
 	xmlns:cards="clr-namespace:Syncfusion.Maui.Cards;assembly=Syncfusion.Maui.Cards"
+    xmlns:sfPopup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
              Shell.NavBarIsVisible="False">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <core:SfBusyIndicator IsRunning="{Binding IsLoading}"
                           AnimationType="Cupertino"
-                          Title="Obteniendo informacion..."
+                          Title="{Binding ActivityIndicatorText}"
                           TextColor="{AppThemeBinding Light=Black, Dark=White}"
                           TitlePlacement="Bottom"
                           DurationFactor="0.2"
@@ -24,14 +31,49 @@
                           FontSize="18"
                           >
         
-            
-            <VerticalStackLayout HorizontalOptions="Fill" Margin="10,0,10,0" VerticalOptions="Center" >
-            <Label Text="Tus productos:" Margin="10,20,0,0" FontSize="18" FontAttributes="Bold" TextColor="{AppThemeBinding Light=Black, Dark=White}"/>
+        <Grid VerticalOptions="Fill" HorizontalOptions="Fill" Margin="10,0,10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="3*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <HorizontalStackLayout Grid.Row="0" Grid.Column="0">
+                <Label                             
+                       FontSize="18" 
+                       FontAttributes="Bold" 
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}" Margin="0,20,0,0">
+                    <Label.Text>
+                        <MultiBinding StringFormat="Hola!, {0}">
+                            <Binding Path="UserName" FallbackValue="X" />
+                        </MultiBinding>
+                    </Label.Text>
+                </Label>
+            </HorizontalStackLayout>
+                <VerticalStackLayout 
+                    Grid.Row="1" 
+                    Grid.Column="0">
+                    <Label Text="Los productos que agregues se mostraran aquí." 
+                           IsVisible="{Binding IsLocalProductListEmpty}"
+                           FontSize="15" 
+                           FontAttributes="Bold" 
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}" 
+                           HorizontalOptions="Center" VerticalOptions="Center"/>
 
-            <CollectionView ItemsSource="{Binding ProductsList}"  Margin="0,30,0,0" HeightRequest="300">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="{x:Type models:Product}">
-                            <cards:SfCardView
+                    <Label Text="Tus productos:" 
+                           Margin="0,20,0,0" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="{AppThemeBinding Light=Black, Dark=White}" 
+                           IsVisible="{Binding IsLocalProductListEmpty, Converter={StaticResource InverseBooleanConverter}}"
+                           HorizontalOptions="Start"/>
+
+                    <CollectionView ItemsSource="{Binding ProductsList}"  Margin="0,30,0,0" HeightRequest="200" IsVisible="{Binding IsLocalProductListEmpty, Converter={StaticResource InverseBooleanConverter}}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type models:Product}">
+                                <cards:SfCardView
                             BackgroundColor="{AppThemeBinding Light=#FCFDFF, Dark=#010103}"
                             CornerRadius="12"
                             BorderColor="LightGray"
@@ -40,23 +82,23 @@
                             VerticalOptions="Center"
                             HorizontalOptions="Fill"
                                 Margin="0,0,0,10">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label 
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label 
                                          Grid.Row="0"
                                          Grid.Column="0"
                                          Text="{Binding ProductId}" 
                                          TextColor="{AppThemeBinding Light=Black, Dark=White}" 
                                          FontAttributes="Bold" 
                                          FontSize="15"/>
-                                    <Label 
+                                        <Label 
                                          Grid.Row="1"
                                          Grid.Column="0"
                                          Text="{Binding ProductName}" 
@@ -64,7 +106,7 @@
                                         MaxLines="1"
                                          TextColor="{AppThemeBinding Light=Black, Dark=White}" 
                                          FontSize="13" Margin="0,0,0,10"/>
-                                    <Button Text="Check history" 
+                                        <Button Text="Check history" 
                                              Grid.Row="1" 
                                              Grid.Column="1" 
                                              VerticalOptions="End" 
@@ -72,13 +114,57 @@
                                              HeightRequest="50"
                                              Command="{Binding Source={RelativeSource AncestorType={x:Type local:MainPageViewModel}}, Path=NavigateProductDetailsCommand}"
                                              CommandParameter="{Binding ProductId}"/>
-                                </Grid>
-                            </cards:SfCardView>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-    
-        </VerticalStackLayout>
+                                    </Grid>
+                                </cards:SfCardView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+            <sfPopup:SfPopup x:Name="popup" 
+                             Grid.Row="1" 
+                             Grid.RowSpan="2" 
+                             Grid.Column="0" 
+                             VerticalOptions="FillAndExpand"
+                             HorizontalOptions="FillAndExpand"  
+                            OverlayMode="Blur" 
+                            IsOpen="{Binding PopUpVisble}"   
+                            AcceptCommand="{Binding SignOutConfirmationPopUpCommand}"
+                            DeclineCommand="{Binding DeclinePopUpCommand}"
+                            ShowFooter="True"
+                            StaysOpen="True"
+                            ShowCloseButton="False"
+                            HeaderTitle="Atención!"
+                            DeclineButtonText="Cancelar"
+                            AcceptButtonText="Ok"
+                            AppearanceMode="TwoButton">
+                <sfPopup:SfPopup.ContentTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding DialogText}"
+                                TextColor="Black"
+                                VerticalTextAlignment="Start"
+                                HorizontalTextAlignment="Start">
+                        </Label>
+                    </DataTemplate>
+                    </sfPopup:SfPopup.ContentTemplate>
+                    <sfPopup:SfPopup.PopupStyle>
+                         <sfPopup:PopupStyle BlurIntensity="Dark"
+                            BlurRadius="3" 
+                            MessageBackground="White"
+                            HeaderBackground="White"
+                            FooterBackground="White"/>
+                </sfPopup:SfPopup.PopupStyle>
+
+            </sfPopup:SfPopup>
+
+            <Button Grid.Row="2" 
+                    Grid.Column="0" 
+                    Text="Cerrar sesión" 
+                    Command="{Binding LogoutCommand}"
+                    Margin="10,10,10,20" 
+                    VerticalOptions="End"/>
+        </Grid>
+            
 
     </core:SfBusyIndicator>
 </views:BasePage>

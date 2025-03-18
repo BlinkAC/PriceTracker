@@ -13,6 +13,7 @@ using Products3.Interfaces;
 using Products3.Models.Authentication;
 using Products3.Models.User;
 using Products3.Views.Pages;
+using Products3.States;
 
 namespace Products3.Viewmodels
 {
@@ -21,6 +22,8 @@ namespace Products3.Viewmodels
         private MailLoginModel loginModel;
         private readonly FirebaseAuthClient _authClient;
         private readonly IBackendClient _backendClient;
+        private readonly IProductsDatabase _database;
+        //private readonly State _state;
         private string _token { get; set; } = string.Empty;
         public MailLoginModel LoginModel
         {
@@ -28,21 +31,39 @@ namespace Products3.Viewmodels
             set => SetProperty(ref loginModel, value);
         }
 
+        private bool isLoading;
+        public bool IsLoading
+        {
+            get => isLoading;
+            set => SetProperty(ref isLoading, value);
+        }
+
+        private string activityIndicatorText = "Iniciando sesión";
+        public string ActivityIndicatorText
+        {
+            get => activityIndicatorText;
+            set => SetProperty(ref activityIndicatorText, value);
+        }
+
         public LoginPageViewModel(
             FirebaseAuthClient authClient,
-            IBackendClient backendClient
-            )
+            IBackendClient backendClient,
+            IProductsDatabase database,
+            State state
+            ) : base( state )
         {
             LoginModel = new MailLoginModel();
             _authClient = authClient;
             _backendClient = backendClient;
+            _database = database;
+            //_state = state;
         }
 
 
         [RelayCommand]
         public async Task GotoRegisterPageAsync()
         {
-            await Shell.Current.GoToAsync(nameof(RegisterPage));
+            await Shell.Current.GoToAsync($"//{nameof(RegisterPage)}");
         }
 
         [RelayCommand]
@@ -67,18 +88,18 @@ namespace Products3.Viewmodels
                     await Shell.Current.DisplayAlert("Error", "Email/Password is incorrect", "Ok");
                     return;
                 }
+                IsLoading = true;
+                await CrossFirebaseCloudMessaging.Current.CheckIfValidAsync().ConfigureAwait(false);
+                _token = await CrossFirebaseCloudMessaging.Current.GetTokenAsync().ConfigureAwait(false);
+                    //user cierra sesion - PENSANDO QUE TODOS SON FREE DE MOMENTO
+                    // dispara una llamad apara quitar el token de su data en mongo - EL NUEVO USUARIO QUE SE LOGGEA USARA EL TOKEN EN SU LUGAR Y ESTO TAMBIEN EVITA QUE SI LA SESION ESTA CERRADA RECIBA NOTIFICAIONES
+                    // a los productos a los que esta suscrito quitar el token -  COSMOS
+                    // elimina el contador de suscripciones (secure storage) y elimina suscripciones de mongo
+                    //implementar un estado de usuario que tenga el token, el contador, el nombre, is premium - DONE
 
-                var deviceFcmToken = await SecureStorage.GetAsync("fcmToken").ConfigureAwait(false);
-                if (deviceFcmToken == null)
-                {
-                    await CrossFirebaseCloudMessaging.Current.CheckIfValidAsync().ConfigureAwait(false);
-                    _token = await CrossFirebaseCloudMessaging.Current.GetTokenAsync().ConfigureAwait(false);
-                    await SecureStorage.SetAsync("fcmToken", _token).ConfigureAwait(false);
-                }
-                _token = deviceFcmToken;
                 var authToken = await _backendClient.GetBackendToken().ConfigureAwait(false);
                 //User logs in
-                //if we dont have a fcmToken we generate one and try to fetch suer data from or DB
+                //if we dont have a fcmToken we generate one and try to fetch user data from or DB
                 var remoteUserData = await _backendClient.CheckUserInfo(new ClientUserData()
                 {
                     UserId = user.Uid,
@@ -86,30 +107,52 @@ namespace Products3.Viewmodels
                     UserSubscriptions = []
                 }, authToken).ConfigureAwait(false);
 
-                //if it's a new login this code won't get executed it's for the next loging even of other devices
-                // if we generated a fcmToken and we got user from db it's like to be a different installation
+                //if it's a new registration this code won't get executed it's for the next loging even of other devices
+                // if we generated a fcmToken and we got user from db it's likely to be a different/new installation
                 //check if the fcmToken it's different if so:
                 //update the token and delete the subscriptions (at least right now as we only support free users)
-                var userData = JsonConvert.DeserializeObject<UserData>(await remoteUserData.Content.ReadAsStringAsync().ConfigureAwait(true));
+                var userData = JsonConvert.DeserializeObject<UserData>(await remoteUserData.Content.ReadAsStringAsync());
                 if (userData!.Details!.FcmToken != _token)
                 {
                     var updateUser = new ClientUserData() {FcmToken = _token, UserId = userData.Details.UserId, UserSubscriptions = [] };
-                    await _backendClient.UpdateUserInfo(updateUser, authToken).ConfigureAwait(false);
-                    await _backendClient.UnSubscribeToProduct(userData.Details.UserSubscriptions.ToList()!, userData.Details.FcmToken!, authToken).ConfigureAwait(false);
+                    await Task.WhenAll(
+                        _backendClient.UpdateUserInfo(updateUser, authToken),
+                        _backendClient.UnSubscribeToProduct(userData.Details.UserSubscriptions.ToList(), userData.Details.FcmToken!, authToken)
+                    );
+
+                    await _database.SaveUserInfo(new UserLocalData()
+                    {
+                        UserId = user.Uid,
+                        FcmToken = _token,
+                        IsPremiumUser = 0,
+                        DisplayName = _authClient.User.Info.DisplayName,
+                        UserSubscriptions = string.Join(",", [])
+                    });
+
+                } else
+                {
+                    //the same and original user has logged again
+                    await _database.SaveUserInfo(new UserLocalData()
+                    {
+                        UserId = user.Uid,
+                        FcmToken = userData.Details.FcmToken,
+                        IsPremiumUser = 0,
+                        DisplayName = _authClient.User.Info.DisplayName,
+                        //later on here you have to manage users subscription/follows for common & premium users
+                        UserSubscriptions = string.Join(",", [])
+                    });
+                    
                 }
+                var userino = await _database.GetUserInfo();
+                State.CurrentUserInfo.Set(userino!);
 
-                //if it's a login on same device then just keep record of it's subcription as it's only allowed to subcribe to 3 products
-                string subscriptions = userData.Details.UserSubscriptions?.Any() == true
-                                        ? string.Join(",", userData.Details.UserSubscriptions.Where(x => !string.IsNullOrWhiteSpace(x.ToString())))
-                                        : string.Empty;
-
-                await SecureStorage.SetAsync("userSubcriptions", subscriptions); ;
 
                 //you wil always get to this page driven by another
                 //therefore when navigating back to main page you need
                 //to do it in the main thread
                 Application.Current?.Dispatcher.Dispatch(async() =>
                 {
+                    IsLoading = false;
                     await Shell.Current.GoToAsync($"//{nameof(MainPage)}",
                         true,
                         new Dictionary<string, object>()
@@ -124,8 +167,19 @@ namespace Products3.Viewmodels
                     );
                 });
             }
+            catch (NullReferenceException ex)
+            {
+                IsLoading = false;
+                // Aquí puedes imprimir la pila de llamadas y el mensaje para ver más detalles.
+                Console.WriteLine($"Se ha producido una excepción: {ex.Message}");
+                Console.WriteLine($"Pila de llamadas: {ex.StackTrace}");
+
+                // Si quieres especificar el objeto que es null, puedes hacerlo así:
+                Console.WriteLine("Error al intentar asignar CurrentUserInfo: El objeto _state o CurrentUserInfo podría ser null.");
+            }
             catch (FirebaseAuthHttpException ex)
             {
+                IsLoading = false;
                 Console.WriteLine(ex.Message);
             }
 

@@ -83,7 +83,7 @@ namespace Products3.Services
         {
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var result = await _httpClient.GetAsync(new Uri(_httpClient.BaseAddress + $"api/ProductHistory?productId={productId}&productStore={"ML"}&fcmToken={fcmToken}")).ConfigureAwait(false);
-            //https://aelexyz-pricetracker-products-dphrgff0d6e3h0hh.canadacentral-01.azurewebsites.net/api/ProductHistory?productId=MLM24529297&productStore=ML&fcmToken=fe2nOlpWQj-Jh2AqzPmtgp:APA91bHhcSNojEvIqP-VvVdLwrppElxggGX630jurDXOZYbo1GFISB-5tdsyk8tBNLo1siYrl_YV4lrOyHIvO3Uw4saJiF2NnKgzL_yHiEypQoKRSLqyRFE
+            
             return result;
         }
 

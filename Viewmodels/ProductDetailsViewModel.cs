@@ -3,9 +3,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Firebase.Auth;
 using Newtonsoft.Json;
+using Plugin.Firebase.CloudMessaging;
 using Products3.Interfaces;
 using Products3.Models.SQLModels;
 using Products3.Models.User;
+using Products3.States;
 using Products3.Views.Pages;
 using SQLite;
 
@@ -18,6 +20,7 @@ namespace Products3.Viewmodels
         private readonly IToastService _toastService;
         private readonly FirebaseAuthClient _firebaseAuthClient;
         private readonly IUserNotification _notificationService;
+        //private readonly State State;
 
         #region Properties
         private string chartTitle = string.Empty;
@@ -123,6 +126,16 @@ namespace Products3.Viewmodels
             }
         }
 
+        private string activityindicatorText;
+        public string ActivityindicatorText
+        {
+            get => activityindicatorText;
+            set
+            {
+                SetProperty(ref activityindicatorText, value);
+            }
+        }
+
         private double chartMaxvalue = 0;
 
         public double ChartMaxvalue
@@ -151,13 +164,15 @@ namespace Products3.Viewmodels
                                        IBackendClient backendClient,
                                        IToastService toastService,
                                        FirebaseAuthClient firebaseAuthClient,
-                                       IUserNotification notificationService)
+                                       IUserNotification notificationService,
+                                       State state) : base(state)
         {
             _database = database;
             _backendClient = backendClient;
             _toastService = toastService;
             _firebaseAuthClient = firebaseAuthClient;
             _notificationService = notificationService;
+            //State = state;
         }
         public override void Reset()
         {
@@ -195,40 +210,45 @@ namespace Products3.Viewmodels
         {
             if (_firebaseAuthClient.User.Info.IsEmailVerified)
             {
-                var tasks = new[]
+                var fcmToken = State.CurrentUserInfo.Get().FcmToken;
+                var localUserSubcriptions = State.CurrentUserInfo.Get().UserSubscriptions!.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList();
+                var userId = State.CurrentUserInfo.Get().UserId;
+
+                var tasks = new []
                 {
                     _backendClient.GetBackendToken(),
-                    SecureStorage.GetAsync("fcmToken")!,
-                    SecureStorage.GetAsync("userSubcriptions")!
+                    
                 };
 
                 await Task.WhenAll(tasks);
 
                 var token = tasks[0].Result;
-                var fcmToken = tasks[1].Result;
-                var localUserSubcriptions = tasks[2].Result.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList();
 
                 if (localUserSubcriptions.Count < 3)
                 {
-                    localUserSubcriptions.Add(ProductId);
+                    ActivityindicatorText = "Suscribiendote al producto...";
                     IsLoading = true;
+                    localUserSubcriptions.Add(ProductId);
                     var cosmosProductResult = await _backendClient.SubscribeToProduct([ProductId], fcmToken, token);
 
-                    var userDataUpdate = new ClientUserData() { FcmToken = fcmToken, UserId = _firebaseAuthClient.User.Uid, UserSubscriptions = localUserSubcriptions };
-                    var mongoUserResult = await _backendClient.UpdateUserInfo(userDataUpdate, token);
+                    var userDataUpdate = new ClientUserData() { FcmToken = fcmToken, UserId = userId, UserSubscriptions = localUserSubcriptions };
+                    
 
                     if (cosmosProductResult.StatusCode == System.Net.HttpStatusCode.OK)
                     {
-                        // Aquí actualizamos las propiedades del ViewModel directamente
+                        var subscriptionsString = string.Join(",", localUserSubcriptions.Distinct().Select(x => x));
+
+                        //mongo update it nos useful for ui thread so can be executed in a different thread
+                        await _backendClient.UpdateUserInfo(userDataUpdate, token);
+                        await _database.UpdateUserSubscriptions(subscriptionsString, userId!);
+
+                        State.CurrentUserInfo.Set(await _database.GetUserInfo());
 
                         isLoading = false;
                         await _notificationService.HandleToastNavigationAsync($"Comenzaras a recibir notificaciones sobre este producto",
                                             CommunityToolkit.Maui.Core.ToastDuration.Short,
                                             $"//{nameof(MainPage)}");
 
-                        var subscriptionsString = string.Join(",", localUserSubcriptions.Distinct().Select(x => x));
-
-                        await SecureStorage.SetAsync("userSubcriptions", subscriptionsString).ConfigureAwait(false);
                     }
                     else
                     {
@@ -261,35 +281,34 @@ namespace Products3.Viewmodels
             try
             {
                 // Mostrar indicador de carga (esto sería una propiedad bindable en tu ViewModel)
+                ActivityindicatorText = "Desuscribiendote del producto...";
                 IsLoading = true;
+                var fcmToken = State.CurrentUserInfo.Get().FcmToken;
+                var localUserSubcriptions = State.CurrentUserInfo.Get().UserSubscriptions!.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList();
+                var userId = State.CurrentUserInfo.Get().UserId;
 
                 // Llamadas asíncronas y captura de datos
                 var tasks = new[]
                 {
                     _backendClient.GetBackendToken(),
-                    SecureStorage.GetAsync("fcmToken")!,
-                    SecureStorage.GetAsync("userSubcriptions")!
                 };
 
                 await Task.WhenAll(tasks); // Ejecutar tareas en paralelo para optimizar tiempo de espera
 
                 var token = tasks[0].Result;
-                var fcmToken = tasks[1].Result;
-                var userSubscriptionsString = tasks[2].Result;
 
-                var userSubscriptions = userSubscriptionsString?.Split(",").ToList() ?? new List<string>();
-                userSubscriptions.Remove(ProductId);
+                localUserSubcriptions.Remove(ProductId);
 
                 // Llamada al backend para desuscribirse
                 var cosmosProductResult = await _backendClient.UnSubscribeToProduct([ProductId], fcmToken, token);
 
-                string subscriptions = userSubscriptions?.Any() == true
-                                        ? string.Join(",", userSubscriptions.Where(x => !string.IsNullOrWhiteSpace(x.ToString())))
+                string subscriptions = localUserSubcriptions?.Any() == true
+                                        ? string.Join(",", localUserSubcriptions.Where(x => !string.IsNullOrWhiteSpace(x.ToString())))
                                         : string.Empty;
 
-                var userDataUpdate = new ClientUserData() { FcmToken = fcmToken, UserId = _firebaseAuthClient.User.Uid, UserSubscriptions = userSubscriptions };
+                var userDataUpdate = new ClientUserData() { FcmToken = fcmToken, UserId = _firebaseAuthClient.User.Uid, UserSubscriptions = localUserSubcriptions };
                 var mongoUserResult = await _backendClient.UpdateUserInfo(userDataUpdate, token);
-
+                
 
                IsLoading = false;
                 // Manejo del resultado (notificaciones o navegación)
@@ -302,7 +321,9 @@ namespace Products3.Viewmodels
                 await _notificationService.HandleToastNavigationAsync(toastMessage, CommunityToolkit.Maui.Core.ToastDuration.Short, navigationPage);
                 if (cosmosProductResult.StatusCode == System.Net.HttpStatusCode.OK && mongoUserResult.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    await SecureStorage.SetAsync("userSubcriptions", subscriptions).ConfigureAwait(false);
+                    await _database.UpdateUserSubscriptions(subscriptions, userId!);
+                    State.CurrentUserInfo.Set(await _database.GetUserInfo());
+
                 }
             }
             catch (Exception ex)
@@ -361,13 +382,15 @@ namespace Products3.Viewmodels
             Reset();
             try
             {
-
+                ActivityindicatorText = "Obteniendo información...";
                 var backendToken = await _backendClient.GetBackendToken().ConfigureAwait(false);
-                var fcmToken = await SecureStorage.GetAsync("fcmToken").ConfigureAwait(false);
-            //intenta obtener el id de mongo
-            //lo obtuvo usa el parentId para buscar en GetProducHistory(ProductId, backendToken)
-            //si no obtuvo nada usa el original
-            if (!string.IsNullOrEmpty(backendToken) && !string.IsNullOrEmpty(ProductId))
+                var fcmToken = State.CurrentUserInfo.Get().FcmToken;
+                    //await SecureStorage.GetAsync("fcmToken").ConfigureAwait(false);
+
+                //intenta obtener el id de mongo
+                //lo obtuvo usa el parentId para buscar en GetProducHistory(ProductId, backendToken)
+                //si no obtuvo nada usa el original
+                if (!string.IsNullOrEmpty(backendToken) && !string.IsNullOrEmpty(ProductId))
             {
                 var backendProductTask = _backendClient.GetProducHistory(productId, backendToken, fcmToken!);
                 var sqliteProductTask = _database.GetProduct(ProductId);

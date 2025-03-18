@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PriceTracker.API.Models;
 using Products3.Models.SQLModels;
+using Products3.Models.User;
 using Products3.Services;
 using SQLite;
 
@@ -18,9 +20,15 @@ namespace Products3.Interfaces
 
         public Task<IEnumerable<Product>> GetProducts();
 
-        public Task<int> RemoveProducts(IEnumerable<string> productString);
+        public Task<int> RemoveAllProducts();
 
-        public Task RemoveProduct(string logIds);
+        public Task<int> RemoveProducts(IEnumerable<string> logIds);
+
+        public Task<UserLocalData?> GetUserInfo();
+        public Task SaveUserInfo(UserLocalData userInfo);
+
+        public Task UpdateUserSubscriptions(string products, string userId);
+        public Task<int> DeleteUserInfo();
 
     }
 }

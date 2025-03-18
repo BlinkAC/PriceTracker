@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Input;
 using Firebase.Auth;
 using Products3.Interfaces;
 using Products3.Services;
+using Products3.States;
 using Products3.Views.Pages;
 using SQLite;
 
@@ -32,7 +33,7 @@ namespace Products3.Viewmodels
         [ObservableProperty]
         private string productName = string.Empty;
 
-        public ProductFormViewModel(IProductsDatabase database, IToastService toastService,IBackendClient backendClient, IUserNotification notificationService, FirebaseAuthClient firebaseAuthClient)
+        public ProductFormViewModel(IProductsDatabase database, IToastService toastService,IBackendClient backendClient, IUserNotification notificationService, FirebaseAuthClient firebaseAuthClient,State state) : base(state)
         {
             _database = database;
             _toastService = toastService;
@@ -97,11 +98,11 @@ namespace Products3.Viewmodels
 
         public override async Task Initialize()
         {
-            if(_firebaseAuthClient.User.Uid == null)
+            if(_firebaseAuthClient.User == null)
             {
                 await _notificationService.HandleToastNavigationAsync("Debes iniciar sesion para agregar productos",
                                                              CommunityToolkit.Maui.Core.ToastDuration.Short,
-                                                             $"//{nameof(MainPage)}");
+                                                             $"//{nameof(LoginPage)}");
             }
         }
     }
